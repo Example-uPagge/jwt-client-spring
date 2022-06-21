@@ -1,10 +1,10 @@
-package org.sadech.exaple.jwt.client.one.service;
+package dev.struchkov.example.jwt.client.one.service;
 
+import dev.struchkov.example.jwt.client.one.domain.Role;
 import io.jsonwebtoken.Claims;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.sadech.exaple.jwt.client.one.domain.JwtAuthentication;
-import org.sadech.exaple.jwt.client.one.domain.Role;
+import dev.struchkov.example.jwt.client.one.domain.JwtAuthentication;
 
 import java.util.List;
 import java.util.Set;

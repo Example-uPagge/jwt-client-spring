@@ -1,16 +1,16 @@
-package org.sadech.exaple.jwt.client.one.config;
+package dev.struchkov.example.jwt.client.one.config;
 
 import lombok.RequiredArgsConstructor;
-import org.sadech.exaple.jwt.client.one.filter.JwtFilter;
+import dev.struchkov.example.jwt.client.one.filter.JwtFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.http.HttpServletResponse;
@@ -19,20 +19,17 @@ import javax.servlet.http.HttpServletResponse;
 @EnableWebSecurity
 @RequiredArgsConstructor
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig {
 
     private final JwtFilter jwtFilter;
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http = http.httpBasic().disable()
-                .csrf().disable();
-
-        http = http.sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and();
-
-        http = http
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+                .httpBasic().disable()
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(
                         (request, response, ex) -> response.sendError(
@@ -40,12 +37,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 ex.getMessage()
                         )
                 )
-                .and();
-
-        http
-                .authorizeRequests().anyRequest().authenticated()
                 .and()
-                .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .authorizeHttpRequests(
+                        authz -> authz
+                                .anyRequest().authenticated()
+                                .and()
+                                .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                ).build();
     }
 
     @Bean

@@ -1,7 +1,7 @@
-package org.sadech.exaple.jwt.client.one.controller;
+package dev.struchkov.example.jwt.client.one.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.sadech.exaple.jwt.client.one.service.AuthService;
+import dev.struchkov.example.jwt.client.one.service.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
