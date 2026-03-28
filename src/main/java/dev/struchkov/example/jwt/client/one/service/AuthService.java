@@ -29,10 +29,10 @@ public final class AuthService {
 
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder()
-                    .setSigningKey(jwtSecret)
+            Jwts.parser()
+                    .verifyWith(jwtSecret)
                     .build()
-                    .parseClaimsJws(token);
+                    .parseSignedClaims(token);
             return true;
         } catch (ExpiredJwtException expEx) {
             log.error("Token expired", expEx);
@@ -49,11 +49,11 @@ public final class AuthService {
     }
 
     public Claims getClaims(@NonNull String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(jwtSecret)
+        return Jwts.parser()
+                .verifyWith(jwtSecret)
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token)
+                .getPayload();
     }
 
     public JwtAuthentication getAuthentication() {
